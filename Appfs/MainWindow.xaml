@@ -1,0 +1,147 @@
+﻿<Window x:Class="Appfs.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Приложение управления социальной сетью" Height="600" Width="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Импорт JSON" Click="ImportJson_Click"/>
+                <MenuItem Header="Экспорт JSON" Click="ExportJson_Click"/>
+                <MenuItem Header="Резервное копирование" Click="BackupDatabase_Click"/>
+                <MenuItem Header="Восстановление" Click="RestoreDatabase_Click"/>
+            </MenuItem>
+            <MenuItem Header="Операции">
+                <MenuItem Header="Выполнить SQL" Click="ShowSqlPanel_Click"/>
+            </MenuItem>
+        </Menu>
+
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Button Content="Добавить пользователя" Click="AddUser_Click" Margin="0,0,10,0"/>
+                    <Button Content="Удалить пользователя" Click="DeleteUser_Click" Margin="0,0,10,0"/>
+                    <Button Content="Обновить пользователя" Click="UpdateUser_Click"/>
+                </StackPanel>
+                <ListBox x:Name="UsersListBox" Grid.Row="1" ItemsSource="{Binding Users}" SelectionChanged="UsersListBox_SelectionChanged">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding FirstName}" Margin="0,0,5,0"/>
+                                <TextBlock Text="/" Margin="0,0,5,0"/>
+                                <TextBlock Text="{Binding LastName}" Margin="0,0,5,0"/>
+                                <TextBlock Text="/" Margin="0,0,5,0"/>
+                                <TextBlock Text="{Binding Email}" Margin="0,0,5,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Детали пользователя:" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                <GroupBox Grid.Row="1" Header="Публикации">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ListBox x:Name="PostsListBox" ItemsSource="{Binding Posts}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBox Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding CreatedDate, StringFormat='{}{0:dd/MM/yyyy HH:mm}'}" FontStyle="Italic"/>
+                                        <ItemsControl ItemsSource="{Binding Tags}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding}" Margin="0,0,5,0" Foreground="Blue"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Button Grid.Row="1" Content="Обновить публикации" Click="UpdatePosts_Click" Margin="0,5,0,0"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Grid.Row="2" Header="Группы">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ListBox x:Name="GroupsListBox" ItemsSource="{Binding Groups}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBox Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox Text="{Binding Role, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Button Grid.Row="1" Content="Обновить группы" Click="UpdateGroups_Click" Margin="0,5,0,0"/>
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Grid.Row="3" Header="Друзья">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ListBox x:Name="FriendsListBox" ItemsSource="{Binding Friends}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,5,0"/>
+                                        <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Button Grid.Row="1" Content="Обновить друзей" Click="UpdateFriends_Click" Margin="0,5,0,0"/>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </Grid>
+
+        <StackPanel x:Name="SqlPanel" Grid.Row="2" Orientation="Horizontal" Margin="10" Visibility="Collapsed">
+            <TextBox x:Name="SqlQueryTextBoxInMenu" Width="400" Margin="0,0,10,0" VerticalAlignment="Center"/>
+            <Button Content="Выполнить SQL" Click="ExecuteSqlQuery_Click" Padding="5,0" Margin="0,0,10,0"/>
+            <Button Content="Выполнить DDL" Click="ExecuteDdlQuery_Click" Padding="5,0"/>
+        </StackPanel>
+    </Grid>
+</Window>
